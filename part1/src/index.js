@@ -10,7 +10,7 @@ const Content = (props) => {
   const partList = props.parts.map(part => {
     return <Part key={part.name.toString()} part={part.name} exercises={part.exercises} />
   })
-  console.log(partList);
+  //console.log(partList);
   return (
     <div>
       {partList}
@@ -18,7 +18,6 @@ const Content = (props) => {
   )
 }
 const Part = (props) => {
-  
   return (
     <p>
       {props.part} {props.exercises}
@@ -26,8 +25,13 @@ const Part = (props) => {
   )
 }
 const Total = (props) => {
+  const parts = props.parts;
+  let sum = 0;
+  parts.forEach(part => {
+    sum += part.exercises;
+  })              
   return (
-    <p>Number of exercises {props.sum}</p>
+    <p>Number of exercises {sum}</p>
   )
 }
 const App = () => {
@@ -51,7 +55,7 @@ const App = () => {
     <div>
       <Header course={course}/>
       <Content parts={parts}/>
-      <Total sum={parts[0].exercises + parts[1].exercises + parts[2].exercises}/>
+      <Total parts={parts}/>
     </div>
   )
 }
