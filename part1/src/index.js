@@ -3,14 +3,23 @@ import ReactDOM from 'react-dom'
 
 const Statistics = ({good, neutral, bad}) => {
   const all = good + neutral + bad;
+  if(good > 0 || neutral > 0 || bad > 0){
+    return(
+      <div>
+        <h1>Statistics</h1>
+        <p>Good {good}</p>
+        <p>Neutral {neutral}</p>
+        <p>Bad {bad}</p>
+        <p>All {all}</p>
+        <p>Average {(good - bad)/9}</p>
+        <p>Positive {((good)/(9)*100)}%</p>
+      </div>
+    )
+  }
   return(
     <div>
-      <p>Good {good}</p>
-      <p>Neutral {neutral}</p>
-      <p>Bad {bad}</p>
-      <p>All {all}</p>
-      <p>Average {(good - bad)/9}</p>
-      <p>Positive {((good)/(9)*100)}%</p>
+      <h1>Statistics</h1>
+      <p>No feedback given</p>
     </div>
   )
 }
@@ -37,6 +46,7 @@ const App = () => {
       <button onClick={handleGoodIncrement}>Good</button>
       <button onClick={handleNeutralIncrement}>Neutral</button>
       <button onClick={handleBadIncrement}>Bad</button>
+      
       <Statistics good={good} neutral={neutral} bad={bad} />
       
     </div>
