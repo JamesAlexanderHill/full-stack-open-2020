@@ -25,12 +25,15 @@ const App = (props) => {
     setPoints(copy);
   }
 
+  const max = points.indexOf(Math.max(...points));
+
   return (
     <div>
       {props.anecdotes[selected]}
       <br />
       <Button text="Vote" func={() => handleSetPoints(selected)} />
       <Button text="New Anecdote" func={handleSetSelected} />
+      {props.anecdotes[max]}
     </div>
   )
 }
