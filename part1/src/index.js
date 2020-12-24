@@ -7,18 +7,29 @@ const Button = ({text, func}) => {
 }
 const App = (props) => {
   const [selected, setSelected] = useState(0);
+  const [points, setPoints] = useState(Array(6).fill(0));
+
   const handleSetSelected = () => {
-    let rand = Math.floor(Math.random() * 5);
-    while(rand == selected){
-      rand = Math.floor(Math.random() * 5);
+    let rand = Math.floor(Math.random() * 6);
+    while(rand === selected){
+      rand = Math.floor(Math.random() * 6);
     }
+    console.log(rand);
     setSelected(rand);
+  }
+
+  const handleSetPoints = (index) => {
+    const copy = [ ...points ]
+    copy[index] += 1;
+    console.log(copy);
+    setPoints(copy);
   }
 
   return (
     <div>
       {props.anecdotes[selected]}
       <br />
+      <Button text="Vote" func={() => handleSetPoints(selected)} />
       <Button text="New Anecdote" func={handleSetSelected} />
     </div>
   )
