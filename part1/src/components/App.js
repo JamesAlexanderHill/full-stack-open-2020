@@ -52,11 +52,17 @@ const App = () => {
             name: newName,
             number: newNumber
         };
-        const index = persons.findIndex(person => person.name === personObj.name)
-        if(index === -1){
-            setPersons(persons.concat(personObj));
-            setNewName('');
-            setNewNumber('');
+        
+        const person = persons.find(p => p.name === personObj.name);
+        if(!person){
+            axios
+            .post('http://localhost:3001/persons', personObj)
+            .then(res => {
+                //console.log(res);
+                setPersons(persons.concat(personObj));
+                setNewName('');
+                setNewNumber('');
+            })
         }else{
             alert(`${newName} is already added to phonebook`);
         }
