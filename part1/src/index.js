@@ -16,14 +16,15 @@ const Country = (props) => {
       <ul>
         {languages}
       </ul>
-      <img src={country.flag} width="200px"/>
+      <img src={country.flag} alt={country.name + ` Flag`} width="200px"/>
     </div>
   )
 }
 
 const Countries = (props) => {
   const countries = props.countries;
-  const list = countries.map((country) => <li key={country.numericCode}>{country.name}</li>);
+
+  const list = countries.map((country) => <li key={country.numericCode}>{country.name} <button onClick={() => {props.setFilterFunc(country.name)}}>Show</button></li>);
   if(countries.length > 10){
     return(
       <p>Too many matches, specify another filter</p>
@@ -72,7 +73,7 @@ const App = () => {
   return (
     <div>
       Find countries <input value={filter} onChange={handleSetFilter} />
-      <Countries countries={filteredCountries}/>
+      <Countries countries={filteredCountries} setFilterFunc={setFilter}/>
     </div>
   )
 }
