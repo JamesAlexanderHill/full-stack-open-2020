@@ -1,7 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import axios from 'axios'
+const Weather = (props) => {
+  const country=props.country;
 
+  const [temp, setTemp] = useState('');
+  const [speed, setSpeed] = useState('');
+  const [dir, setDir] = useState('');
+
+  useEffect(() => {
+    axios
+      .get(`http://api.weatherstack.com/current?access_key=${process.env.REACT_APP_API_KEY}&query=${country}`)
+      .then(response => {
+        console.log(response.data);
+        setTemp(response.data.current.temperature);
+        setSpeed(response.data.current.wind_speed);
+        setDir(response.data.current.wind_dir)
+      })
+  }, [country])
+
+  return(
+    <div>
+      <p>Temperature: {temp}<br />
+      Wind: {speed}mph direction {dir}</p>
+    </div>
+  )
+}
 const Country = (props) => {
   const country = props.country;
   const languages = country.languages.map((lang) => <li key={lang.name}>{lang.name}</li>);
@@ -17,6 +41,8 @@ const Country = (props) => {
         {languages}
       </ul>
       <img src={country.flag} alt={country.name + ` Flag`} width="200px"/>
+      <h3>Weather in {country.name}</h3>
+      <Weather country={country.name} />
     </div>
   )
 }
