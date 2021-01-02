@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import personServices from '../services/persons'
 
-const Notification = ({message}) => {
-    if(message == null){
+const Notification = ({messageObj}) => {
+    if(messageObj.message == null){
         return null;
     }
     const notifStyle = {
@@ -15,8 +15,8 @@ const Notification = ({message}) => {
         marginBottom: 10
     }
     return(
-        <div style={notifStyle}>
-            {message}
+        <div style={messageObj.style}>
+            {messageObj.message}
         </div>
     )
 }
@@ -79,7 +79,7 @@ const App = () => {
     const [ newName, setNewName ] = useState('');
     const [ newNumber, setNewNumber ] = useState('');
     const [ newFilter, setNewFilter ] = useState('');
-    const [ message, setMessage ] = useState(null)
+    const [ message, setMessage ] = useState({message: null, style: {}})
 
     const addPerson = (event) => {
         event.preventDefault();
@@ -96,9 +96,20 @@ const App = () => {
                 setPersons(persons.concat(returnedPerson));
                 setNewName('');
                 setNewNumber('');
-                setMessage(`Added ${returnedPerson.name}`);
+                setMessage({
+                    message: `Added ${returnedPerson.name}`,
+                    style: {
+                        color: 'green',
+                        background: 'lightgrey',
+                        fontSize: 20,
+                        borderStyle: 'solid',
+                        borderRadius: 5,
+                        padding: 10,
+                        marginBottom: 10
+                    }
+                });
                 setTimeout(() => {
-                    setMessage(null)
+                    setMessage({message: null, style: {}})
                 }, 3000)
             })
         }else{
@@ -113,10 +124,39 @@ const App = () => {
                         setPersons(persons.map(p => p.id !== person.id ? p : updatedPerson));
                         setNewName('');
                         setNewNumber('');
-                        setMessage(`${person.name} was sucessfully edited`);
+                        setMessage({
+                            message: `${person.name} was sucessfully edited`,
+                            style: {
+                                color: 'green',
+                                background: 'lightgrey',
+                                fontSize: 20,
+                                borderStyle: 'solid',
+                                borderRadius: 5,
+                                padding: 10,
+                                marginBottom: 10
+                            }
+                        });
                         setTimeout(() => {
-                            setMessage(null)
+                            setMessage({message: null, style: {}})
                         }, 3000)
+                    })
+                    .catch(error => {
+                        setMessage({
+                            message: `Information of '${person.name}' has already been removed from server`,
+                            style: {
+                                color: 'red',
+                                background: 'lightgrey',
+                                fontSize: 20,
+                                borderStyle: 'solid',
+                                borderRadius: 5,
+                                padding: 10,
+                                marginBottom: 10
+                            }
+                        });
+                        setTimeout(() => {
+                            setMessage({message: null, style: {}})
+                        }, 5000)
+                        setPersons(persons.filter(p => p.id !== person.id))
                     })
                 }
             }
@@ -136,7 +176,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <Notification message={message} />
+            <Notification messageObj={message} />
             <Filter newFilter={newFilter} setNewFilter={setNewFilter} />
             <h3>add a new</h3>
             <PersonForm addPerson={addPerson} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} />
