@@ -1,6 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import personServices from '../services/persons'
 
+const Notification = ({message}) => {
+    if(message == null){
+        return null;
+    }
+    const notifStyle = {
+        color: 'green',
+        background: 'lightgrey',
+        fontSize: 20,
+        borderStyle: 'solid',
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 10
+    }
+    return(
+        <div style={notifStyle}>
+            {message}
+        </div>
+    )
+}
+
 const Filter = (props) => {
     const handleFilterChange =(event) => {
         props.setNewFilter(event.target.value);
@@ -55,10 +75,11 @@ const Persons = ({persons, newFilter, setPersonsFunc}) => {
 
 
 const App = () => {
-    const [persons, setPersons] = useState([]);
+    const [ persons, setPersons ] = useState([]);
     const [ newName, setNewName ] = useState('');
     const [ newNumber, setNewNumber ] = useState('');
     const [ newFilter, setNewFilter ] = useState('');
+    const [ message, setMessage ] = useState(null)
 
     const addPerson = (event) => {
         event.preventDefault();
@@ -75,6 +96,10 @@ const App = () => {
                 setPersons(persons.concat(returnedPerson));
                 setNewName('');
                 setNewNumber('');
+                setMessage(`Added ${returnedPerson.name}`);
+                setTimeout(() => {
+                    setMessage(null)
+                }, 3000)
             })
         }else{
             if(person.number === personObj.number){
@@ -88,6 +113,10 @@ const App = () => {
                         setPersons(persons.map(p => p.id !== person.id ? p : updatedPerson));
                         setNewName('');
                         setNewNumber('');
+                        setMessage(`${person.name} was sucessfully edited`);
+                        setTimeout(() => {
+                            setMessage(null)
+                        }, 3000)
                     })
                 }
             }
@@ -98,14 +127,6 @@ const App = () => {
     
 
     useEffect(() => {
-        //console.log('effect')
-        // axios
-        // .get('http://localhost:3001/persons')
-        // .then(response => {
-        //     console.log('promise fulfilled')
-        //     setPersons(response.data)
-        // })
-
         personServices
         .getAll()
         .then(initialPersons => {
@@ -115,6 +136,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={message} />
             <Filter newFilter={newFilter} setNewFilter={setNewFilter} />
             <h3>add a new</h3>
             <PersonForm addPerson={addPerson} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} />
