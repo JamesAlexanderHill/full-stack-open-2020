@@ -76,16 +76,22 @@ const App = () => {
                 setNewName('');
                 setNewNumber('');
             })
-            // axios
-            // .post('http://localhost:3001/persons', personObj)
-            // .then(res => {
-            //     //console.log(res);
-            //     setPersons(persons.concat(personObj));
-            //     setNewName('');
-            //     setNewNumber('');
-            // })
         }else{
-            alert(`${newName} is already added to phonebook`);
+            if(person.number === personObj.number){
+                alert(`${person.name} is already added to phonebook`);
+            }else{
+                //update phone number
+                if (window.confirm(`${person.name} is already added to your phonebook, replace the old number with a new one?`)) {
+                    personServices
+                    .put(person.id, personObj)
+                    .then(updatedPerson => {
+                        setPersons(persons.map(p => p.id !== person.id ? p : updatedPerson));
+                        setNewName('');
+                        setNewNumber('');
+                    })
+                }
+            }
+            
         }
     }
     

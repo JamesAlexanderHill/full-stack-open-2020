@@ -21,5 +21,10 @@ const remove = (id) => {
     const request = axios.delete(`${baseUrl}/${id}`)
     return request.then(response => response.data)
 }
-const exp = { getAll, create, update, remove };
+
+const put = (id, changedPerson) => {
+    const request = axios.put(`${baseUrl}/${id}`, changedPerson)
+    return request.then(response => response.data)
+}
+const exp = { getAll, create, update, remove, put };
 export default exp;
