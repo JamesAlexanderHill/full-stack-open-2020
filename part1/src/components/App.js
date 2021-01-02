@@ -28,11 +28,25 @@ const PersonForm = (props) => {
     )
 }
 
-const Persons = (props) => {
+const Persons = ({persons, newFilter, setPersonsFunc}) => {
+
+    const phonebook = persons.filter((person) => person.name.toLowerCase().includes(newFilter.toLowerCase())).map((person) => {
+        return <li key={person.name}>{person.name} - {person.number} <button onClick={() => {
+            if (window.confirm(`Delete ${person.name}?`)) {
+                personServices
+                .remove(person.id)
+                .then((returnedPerson) => {
+                    const newPersons = persons.filter(p => p.id !== person.id);
+                    setPersonsFunc(newPersons);
+                })
+            }
+        }}>Delete</button></li>
+    });
+
     return(
         <div>
             <ul>
-            {props.phonebook}
+            {phonebook}
             </ul>
         </div>
     )
@@ -75,9 +89,7 @@ const App = () => {
         }
     }
     
-    const phonebook = persons.filter((person) => person.name.toLowerCase().includes(newFilter.toLowerCase())).map((person) => {
-        return <li key={person.name}>{person.name} - {person.number}</li>
-    });
+    
 
     useEffect(() => {
         //console.log('effect')
@@ -101,7 +113,7 @@ const App = () => {
             <h3>add a new</h3>
             <PersonForm addPerson={addPerson} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} />
             <h3>Numbers</h3>
-            <Persons phonebook={phonebook}/>
+            <Persons persons={persons} newFilter={newFilter} setPersonsFunc={setPersons} />
         </div>
     )
 }
