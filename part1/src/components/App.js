@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import personServices from '../services/persons'
 
 const Filter = (props) => {
     const handleFilterChange =(event) => {
@@ -55,14 +55,21 @@ const App = () => {
         
         const person = persons.find(p => p.name === personObj.name);
         if(!person){
-            axios
-            .post('http://localhost:3001/persons', personObj)
-            .then(res => {
-                //console.log(res);
-                setPersons(persons.concat(personObj));
+            personServices
+            .create(personObj)
+            .then(returnedPerson => {
+                setPersons(persons.concat(returnedPerson));
                 setNewName('');
                 setNewNumber('');
             })
+            // axios
+            // .post('http://localhost:3001/persons', personObj)
+            // .then(res => {
+            //     //console.log(res);
+            //     setPersons(persons.concat(personObj));
+            //     setNewName('');
+            //     setNewNumber('');
+            // })
         }else{
             alert(`${newName} is already added to phonebook`);
         }
@@ -73,12 +80,18 @@ const App = () => {
     });
 
     useEffect(() => {
-        console.log('effect')
-        axios
-        .get('http://localhost:3001/persons')
-        .then(response => {
-            console.log('promise fulfilled')
-            setPersons(response.data)
+        //console.log('effect')
+        // axios
+        // .get('http://localhost:3001/persons')
+        // .then(response => {
+        //     console.log('promise fulfilled')
+        //     setPersons(response.data)
+        // })
+
+        personServices
+        .getAll()
+        .then(initialPersons => {
+            setPersons(initialPersons);
         })
     }, [])
     return (
